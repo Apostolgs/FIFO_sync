@@ -1,0 +1,41 @@
+# -----------------------------
+# Simulation build artifacts
+# -----------------------------
+work/
+*.lib
+
+# Riviera / ModelSim / Aldec outputs
+*.asdb
+*.wlf
+*.vcd
+*.vpd
+*.fst
+
+# Logs
+*.log
+transcript
+vsim.wlf
+
+# Generated archives / outputs
+*.zip
+result.zip
+
+# -----------------------------
+# Tool / IDE specific
+# -----------------------------
+.aldec/
+
+# -----------------------------
+# OS / environment files
+# -----------------------------
+.bashrc
+.bash_profile
+.bash_logout
+.flexlmrc
+
+# -----------------------------
+# Misc
+# -----------------------------
+*.swp
+*~
+.DS_Store
