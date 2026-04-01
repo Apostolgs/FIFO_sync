@@ -13,11 +13,20 @@ class fifo_test extends uvm_test;
   endfunction
 
   task run_phase(uvm_phase phase);
-    fifo_sequence seq;
+    fifo_write_sequence wr_seq;
+    fifo_read_sequence rd_seq;
+    fifo_random_sequence rand_seq;
+
     phase.raise_objection(this);
 
-    seq = fifo_sequence::type_id::create("seq");
-    seq.start(env.agent.seqr);
+    wr_seq = fifo_write_sequence::type_id::create("wr_seq");
+    wr_seq.start(env.agent.seqr);
+
+    rd_seq = fifo_read_sequence::type_id::create("rd_seq");
+    rd_seq.start(env.agent.seqr);
+
+    rand_seq = fifo_random_sequence::type_id::create("rand_seq");
+    rand_seq.start(env.agent.seqr);
 
     phase.drop_objection(this);
   endtask

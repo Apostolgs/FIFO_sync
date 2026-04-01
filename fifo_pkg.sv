@@ -3,7 +3,9 @@ package fifo_pkg;
   import uvm_pkg::*;
 
   `include "fifo_item.sv"
-  `include "fifo_sequence.sv"
+  `include "fifo_random_sequence.sv"
+  `include "fifo_write_sequence.sv"
+  `include "fifo_read_sequence.sv"
   `include "fifo_driver.sv"
   `include "fifo_monitor.sv"
   `include "fifo_sequencer.sv"
