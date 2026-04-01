@@ -22,6 +22,7 @@ class fifo_monitor extends uvm_monitor;
 
   task run_phase(uvm_phase phase);
   fifo_item tr;
+  fifo_item rd_tr;
 
   `uvm_info("MON", "run_phase started", UVM_LOW)
 
@@ -32,6 +33,38 @@ class fifo_monitor extends uvm_monitor;
   forever begin
     // sample exactly when the driver drives
     @(posedge vif.clk);
+
+    // Write observation
+    if(vif.wr_en) begin
+      tr = fifo_item::type_id::create("tr", this);
+      tr.wr_en = 1;
+      tr.rd_en = 0;
+      tr.data = vif.din;
+      tr.is_read_sample = 0;
+
+      mon_ap.write(tr);
+
+      `uvm_info("MON", $sformatf("WRITE : data = 0x%0h", tr.data), UVM_MEDIUM)
+    end
+
+    //Read request -> capture output next cycle
+    if(vif.rd_en) begin
+      fork begin
+          @(posedge vif.clk);
+
+          rd_tr = fifo_item::type_id::create("rd_tr", this);
+          rd_tr.wr_en = 0;
+          rd_tr.rd_en = 1;
+          rd_tr.dout = vif.dout;
+          rd_tr.is_read_sample = 1;
+
+          mon_ap.write(rd_tr);
+
+          `uvm_info("MON", $sformatf("READ: dout=0x%0h", rd_tr.dout), UVM_MEDIUM)
+        end
+      join_none
+    end
+
 
     tr = fifo_item::type_id::create("tr", this);
     tr.wr_en = vif.wr_en;

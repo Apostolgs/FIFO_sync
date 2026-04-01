@@ -4,7 +4,7 @@ class fifo_scoreboard extends uvm_component;
   // receives transactions from monitor
   uvm_analysis_imp #(fifo_item, fifo_scoreboard) imp;
 
-  virtual dut_if vif;
+
 
   byte unsigned model_q[$];  // reference model queue
 
@@ -15,36 +15,30 @@ class fifo_scoreboard extends uvm_component;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual dut_if)::get(this, "", "vif", vif))
-      `uvm_fatal("NOVIF", "Virtual interface 'vif' not found in config DB")
   endfunction
 
   // Called automatically when monitor does ap.write(tr)
   function void write(fifo_item tr);
-    `uvm_info("SCB", "Got transaction", UVM_LOW);
     // Model write
-    if (tr.wr_en && !vif.full) begin
+    if (tr.wr_en && !tr.is_read_sample) begin
       model_q.push_back(tr.data);
+      `uvm_info("SCB", $sformatf("MODEL PUSH: 0x%0h (size=%0d)", tr.data, model_q.size()), UVM_LOW)
     end
 
     // Model read/compare
-    if (tr.rd_en && !vif.empty) begin
-      if (model_q.size() == 0) begin
-        `uvm_error("SCB", "DUT read when model queue is empty")
+    if(tr.is_read_sample) begin
+      if(model_q.size() == 0) begin
+        `uvm_error("SCB", "Read occured but model is empty")
       end
       else begin
         byte unsigned exp = model_q.pop_front();
 
-        // compare on next clock edge (1-cycle latency)
-        fork
-          begin
-            @(posedge vif.clk);
-            if (vif.dout !== exp) begin
-              `uvm_error("SCB",
-                $sformatf("Mismatch: expected dout=0x%0h got dout=0x%0h", exp, vif.dout))
-            end
-          end
-        join_none
+        if (tr.dout !== exp) begin
+          `uvm_error("SCB", $sformatf("MISMATCH: expected=0x%0h got=0x%0h", exp, tr.dout))
+        end
+        else begin
+          `uvm_info("SCB", $sformatf("MATCH: 0x%0h", tr.dout), UVM_LOW)
+        end
       end
     end
 
