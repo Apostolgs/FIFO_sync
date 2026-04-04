@@ -11,7 +11,7 @@ module FIFO_sync_TB;
   bit clk;
   dut_if #(DEPTH, DATA_WIDTH) dut_vi (.clk(clk));
   dut_wrapper #(DEPTH, DATA_WIDTH) dut_wr (._if(dut_vi));
-
+  
   always #2.5 clk = ~clk;
 
   initial begin

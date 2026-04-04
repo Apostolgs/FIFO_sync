@@ -3,6 +3,7 @@ class fifo_env extends uvm_env;
 
   fifo_agent      agent;
   fifo_scoreboard scb;   // NEW
+  fifo_coverage cov;
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -12,6 +13,7 @@ class fifo_env extends uvm_env;
     super.build_phase(phase);
     agent = fifo_agent::type_id::create("agent", this);
     scb   = fifo_scoreboard::type_id::create("scb", this); // NEW
+    cov   = fifo_coverage::type_id::create("cov", this);
   endfunction
 
   function void connect_phase(uvm_phase phase);
