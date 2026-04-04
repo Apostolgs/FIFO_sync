@@ -5,10 +5,10 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
     uvm_analysis_imp #(fifo_item, fifo_coverage) analysis_export;
 
     // virtual interface to sample 
-    virual dut_if vif;
+    virtual dut_if vif;
 
     // depth tracking
-    int unsigned depth
+    int unsigned depth;
 
     // local parameters for bins
     localparam int MAXDEPTH = DEPTH;
@@ -29,7 +29,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
             bins almost_empty = {1};
             bins almost_full = {DEPTH - 1};
 
-            bins mid[] = {[MID_LOW:MID_HIGH]} if (MID_HIGH >= MID_LOW);
+            bins mid[] = {[MID_LOW:MID_HIGH]} with (MID_HIGH >= MID_LOW);
         }
         cp_empty : coverpoint vif.empty {
             bins empty_0 = {1'b0};
@@ -40,9 +40,9 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
             bins full_1 = {1'b1};
         }
         // Cross 
-        cross_op_depth = cross cp_op, cp_depth;
+        cross_op_depth : cross cp_op, cp_depth;
 
-        cross_op_flags = cross cp_op, cp_full, cp_empty;
+        cross_op_flags : cross cp_op, cp_full, cp_empty;
     endgroup
 
     // constructor
