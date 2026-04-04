@@ -16,6 +16,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
     localparam int MID_HIGH = DEPTH - 2;
 
     covergroup fifo_cg;
+        option.per_instance = 1;
         cp_op : coverpoint {vif.wr_en, vif.rd_en} {
             bins idle = {2'b00};
             bins write_only = {2'b10};
