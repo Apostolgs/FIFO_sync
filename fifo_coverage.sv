@@ -68,7 +68,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
 
         // write attempt
         if(tr.wr_en && !tr.is_read_sample) begin
-            if(!vif.full) begin
+            if(!tr.full) begin
                 depth++;
             end
             // else illegal write attempt depth unchanged
@@ -76,7 +76,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
 
         // read
         if(tr.is_read_sample) begin
-            if(!vif.empty) begin
+            if(!tr.empty) begin
                 depth--;
             end
             // else illegal read attempt depth unchanged

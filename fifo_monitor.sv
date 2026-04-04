@@ -38,6 +38,8 @@ class fifo_monitor extends uvm_monitor;
       tr.rd_en = 0;
       tr.data  = vif.din;
       tr.is_read_sample = 0;
+      tr.full  = vif.full;
+      tr.empty = vif.empty;
 
       mon_ap.write(tr);
 
@@ -59,6 +61,8 @@ class fifo_monitor extends uvm_monitor;
           rd_tr.rd_en = 1;
           rd_tr.dout  = vif.dout;
           rd_tr.is_read_sample = 1;
+          tr.full  = vif.full;
+          tr.empty = vif.empty;
 
           mon_ap.write(rd_tr);
 

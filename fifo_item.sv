@@ -5,6 +5,8 @@ class fifo_item extends uvm_sequence_item;
 
   bit [7:0] dout; // observed output
   bit is_read_sample; // is valid read 
+  bit full; 
+  bit empty;
 
   `uvm_object_utils(fifo_item)
 
