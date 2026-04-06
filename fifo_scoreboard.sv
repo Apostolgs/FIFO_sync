@@ -26,7 +26,7 @@ class fifo_scoreboard extends uvm_component;
     end
 
     // Model read/compare
-    if(tr.is_read_sample && tr.read_accepted) begin
+    if(tr.rd_en && tr.read_accepted) begin
       if(model_q.size() == 0) begin
         `uvm_error("SCB", "Read occured but model is empty")
       end

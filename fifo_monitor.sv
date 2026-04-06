@@ -29,9 +29,8 @@ class fifo_monitor extends uvm_monitor;
   forever begin
     @(posedge vif.clk);
 
-    // -------------------------
-    // WRITE (only if accepted)
-    // -------------------------
+    /*
+    // write
     if (vif.wr_en) begin
       tr = fifo_item::type_id::create("tr", this);
       tr.wr_en = 1;
@@ -51,9 +50,7 @@ class fifo_monitor extends uvm_monitor;
         UVM_MEDIUM)
     end
 
-    // -------------------------
-    // READ (only if valid)
-    // -------------------------
+    // read
     if (vif.rd_en) begin
       fork
         begin
@@ -78,7 +75,29 @@ class fifo_monitor extends uvm_monitor;
         end
       join_none
     end
+    */
 
+
+    // new approach
+    tr = fifo_item::type_id::create("tr", this);
+
+    // capture signals
+    tr.wr_en = vif.wr_en;
+    tr.rd_en = vif.rd_en;
+    tr.data  = vif.din;
+    tr.dout  = vif.dout;
+
+    tr.full  = vif.full;
+    tr.empty = vif.empty;
+
+    // acceptance
+    tr.write_accepted = vif.wr_en && !vif.full;
+    tr.read_accepted  = vif.rd_en && !vif.empty;
+
+    // mark read sample valid immediately
+    tr.is_read_sample = tr.rd_en;
+
+    mon_ap.write(tr);
   end
 endtask
 

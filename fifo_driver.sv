@@ -32,10 +32,11 @@ class fifo_driver extends uvm_driver #(fifo_item);
       vif.wr_en <= 0;
       vif.rd_en <= 0;
 
+      /*
       `uvm_info("DRV",
         $sformatf("Driving wr=%0b rd=%0b data=0x%0h", tr.wr_en, tr.rd_en, tr.data),
         UVM_MEDIUM)
-
+      */
       seq_item_port.item_done();
     end
   endtask
