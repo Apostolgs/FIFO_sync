@@ -32,7 +32,7 @@ class fifo_monitor extends uvm_monitor;
     // -------------------------
     // WRITE (only if accepted)
     // -------------------------
-    if (vif.wr_en && !vif.full) begin
+    if (vif.wr_en) begin
       tr = fifo_item::type_id::create("tr", this);
       tr.wr_en = 1;
       tr.rd_en = 0;
@@ -40,6 +40,9 @@ class fifo_monitor extends uvm_monitor;
       tr.is_read_sample = 0;
       tr.full  = vif.full;
       tr.empty = vif.empty;
+
+      tr.write_accepted = !vif.full;
+      tr.read_accepted = 0;
 
       mon_ap.write(tr);
 
@@ -51,7 +54,7 @@ class fifo_monitor extends uvm_monitor;
     // -------------------------
     // READ (only if valid)
     // -------------------------
-    if (vif.rd_en && !vif.empty) begin
+    if (vif.rd_en) begin
       fork
         begin
           @(posedge vif.clk);
@@ -63,6 +66,9 @@ class fifo_monitor extends uvm_monitor;
           rd_tr.is_read_sample = 1;
           rd_tr.full  = vif.full;
           rd_tr.empty = vif.empty;
+
+          rd_tr.write_accepted = 0;
+          rd_tr.read_accepted = !vif.empty;
 
           mon_ap.write(rd_tr);
 
