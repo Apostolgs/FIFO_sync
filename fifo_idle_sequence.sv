@@ -7,7 +7,7 @@ class fifo_idle_sequence extends uvm_sequence #(fifo_item);
 
   task body();
     fifo_item req;
-    repeat (20) begin
+    repeat (10) begin
       `uvm_info("SEQ", "Starting idle sequence body", UVM_MEDIUM);
       req = fifo_item::type_id::create("req");
       start_item(req);

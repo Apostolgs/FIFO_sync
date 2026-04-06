@@ -29,7 +29,7 @@ class fifo_test extends uvm_test;
     rand_seq = fifo_random_sequence::type_id::create("rand_seq");
     rand_seq.start(env.agent.seqr);
 
-    idle_seq = fifo_idle_sequence::type_id::create(:idle_seq);
+    idle_seq = fifo_idle_sequence::type_id::create("idle_seq");
     idle_seq.start(env.agent.seqr);
 
     phase.drop_objection(this);
