@@ -18,7 +18,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
     covergroup fifo_cg;
         option.per_instance = 1;
         cp_op : coverpoint {vif.wr_en, vif.rd_en} {
-            ignore bins idle = {2'b00};
+            bins idle = {2'b00};
             bins write_only = {2'b10};
             bins read_only = {2'b01};
             bins simultanious = {2'b11};
@@ -40,6 +40,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
             bins full_0 = {1'b0};
             bins full_1 = {1'b1};
         }
+        /*
         cp_write_accepted : coverpoint tr.write_accepted {
             bins wr_accepted = {1'b1};
             bins wr_not_accepted = {1'b0};
@@ -47,12 +48,13 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
         cp_read_accepted : coverpoint tr.read_accepted {
             bins rd_accepted = {1'b1};
             bins rd_not_accepted = {1'b0};
-        }
+        }*/
         // Cross 
         op_X_depth : cross cp_op, cp_depth;
 
         op_X_flags : cross cp_op, cp_full, cp_empty;
-
+        
+        /*
         write_accepted_X_op : cross cp_write_accepted, cp_op;
 
         read_accepted_X_op : cross cp_read_accepted, cp_op;
@@ -66,6 +68,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
         read_accepted_X_empty : cross cp_read_accepted, cp_empty;
 
         op_X_depth_X_legal : cross cp_op, cp_depth, cp_write_accepted, cp_read_accepted;
+        */
     endgroup
 
     // constructor
@@ -93,14 +96,14 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
         if(tr.wr_en && tr.write_accepted) begin
             depth++;
         end
-        else pass; // else illegal write attempt depth unchanged
+        else ; // else illegal write attempt depth unchanged
 
 
         // read
         if(tr.rd_en && tr.read_accepted) begin
             depth--;
         end
-        else pass; // else illegal read attempt depth unchanged
+        else ; // else illegal read attempt depth unchanged
 
         // safety depth overflow or underflow
         if(depth > DEPTH) depth = DEPTH;

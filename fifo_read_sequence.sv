@@ -14,7 +14,7 @@ class fifo_read_sequence extends uvm_sequence #(fifo_item);
             req.wr_en = 0;
             req.rd_en = 1;
             req.write_accepted = 0;
-            req.read_accepted = !empty;
+            req.read_accepted = !req.empty;
             assert(req.randomize() with {wr_en == 0; rd_en == 1;});
 
             finish_item(req);
