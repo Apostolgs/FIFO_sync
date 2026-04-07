@@ -20,13 +20,13 @@ class fifo_scoreboard extends uvm_component;
   // Called automatically when monitor does ap.write(tr)
   function void write(fifo_item tr);
     // Model write
-    if (tr.wr_en && tr.write_accepted) begin
+    if (tr.write_accepted) begin
       model_q.push_back(tr.data);
       `uvm_info("SCB", $sformatf("MODEL PUSH: 0x%0h (size=%0d)", tr.data, model_q.size()), UVM_LOW)
     end
 
     // Model read/compare
-    if(tr.rd_en && tr.read_accepted) begin
+    if(tr.read_accepted) begin
       if(model_q.size() == 0) begin
         `uvm_error("SCB", "Read occured but model is empty")
       end
