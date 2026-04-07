@@ -29,7 +29,6 @@ class fifo_monitor extends uvm_monitor;
   forever begin
     @(posedge vif.clk);
 
-    /*
     // write
     if (vif.wr_en) begin
       tr = fifo_item::type_id::create("tr", this);
@@ -75,9 +74,8 @@ class fifo_monitor extends uvm_monitor;
         end
       join_none
     end
-    */
 
-
+    /*
     // new approach
     tr = fifo_item::type_id::create("tr", this);
 
@@ -100,6 +98,8 @@ class fifo_monitor extends uvm_monitor;
     `uvm_info("SCB", $sformatf("Transaction:\nInputs: data_in = %0h wr_en = %0h rd_en = %0h\nOutputs: data_out = %0h full = %0b empty = %0b\nwrite_accepted = %0b read_accepted = %0b", tr.data, tr.wr_en, tr.rd_en, tr.dout, tr.full, tr.empty, tr.write_accepted, tr.read_accepted), UVM_MEDIUM)
     
     mon_ap.write(tr);
+    */
+
   end
 endtask
 
