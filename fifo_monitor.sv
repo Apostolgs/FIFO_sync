@@ -51,8 +51,8 @@ class fifo_monitor extends uvm_monitor;
 
     // read
     if (vif.rd_en) begin
-      fork
-        begin
+      bit was_empty = vif.empty; //need to check if fifo is empty at the time of the read request, not a cycle later in order to set read_accepted value
+      fork begin
           @(posedge vif.clk);
 
           rd_tr = fifo_item::type_id::create("rd_tr", this);
@@ -64,7 +64,7 @@ class fifo_monitor extends uvm_monitor;
           rd_tr.empty = vif.empty;
 
           rd_tr.write_accepted = 0;
-          rd_tr.read_accepted = !vif.empty;
+          rd_tr.read_accepted = !was_empty;
 
           mon_ap.write(rd_tr);
 

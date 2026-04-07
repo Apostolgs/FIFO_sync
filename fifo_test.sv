@@ -23,8 +23,14 @@ class fifo_test extends uvm_test;
     wr_seq = fifo_write_sequence::type_id::create("wr_seq");
     wr_seq.start(env.agent.seqr);
 
+    idle_seq = fifo_idle_sequence::type_id::create("idle_seq");
+    idle_seq.start(env.agent.seqr);
+
     rd_seq = fifo_read_sequence::type_id::create("rd_seq");
     rd_seq.start(env.agent.seqr);
+
+    idle_seq = fifo_idle_sequence::type_id::create("idle_seq");
+    idle_seq.start(env.agent.seqr);
 
     rand_seq = fifo_random_sequence::type_id::create("rand_seq");
     rand_seq.start(env.agent.seqr);

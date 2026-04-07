@@ -15,7 +15,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
     localparam int MID_LOW  = 2;
     localparam int MID_HIGH = DEPTH - 2;
 
-    covergroup fifo_cg;
+    covergroup fifo_cg with function sample(fifo_item tr);
         option.per_instance = 1;
         cp_op : coverpoint {vif.wr_en, vif.rd_en} {
             bins idle = {2'b00};
@@ -40,7 +40,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
             bins full_0 = {1'b0};
             bins full_1 = {1'b1};
         }
-        /*
+
         cp_write_accepted : coverpoint tr.write_accepted {
             bins wr_accepted = {1'b1};
             bins wr_not_accepted = {1'b0};
@@ -48,27 +48,33 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
         cp_read_accepted : coverpoint tr.read_accepted {
             bins rd_accepted = {1'b1};
             bins rd_not_accepted = {1'b0};
-        }*/
+        }
         // Cross 
         op_X_depth : cross cp_op, cp_depth;
 
         op_X_flags : cross cp_op, cp_full, cp_empty;
         
-        /*
-        write_accepted_X_op : cross cp_write_accepted, cp_op;
+        write_accepted_X_op : cross cp_write_accepted, cp_op {
+            illegal_bins write_accepted_X_idle = binsof(cp_write_accepted.wr_accepted) && binsof(cp_op.idle);
+            illegal_bins write_accepted_X_read_only = binsof(cp_write_accepted.wr_accepted) && binsof(cp_op.read_only);
+        }
 
         read_accepted_X_op : cross cp_read_accepted, cp_op;
 
-        write_accepted_X_full : cross cp_write_accepted, cp_full;
+        write_accepted_X_full : cross cp_write_accepted, cp_full {
+            illegal_bins write_accepted_while_full = binsof(cp_write_accepted.wr_accepted) && binsof(cp_full.full_1); // write attempt cant be accepted when FIFO is full
+        }
 
         write_accepted_X_empty : cross cp_write_accepted, cp_empty;
 
-        read_accepted_X_full : cross cp_read_accepted, cp_full;
+        read_accepted_X_full : cross cp_read_accepted, cp_full {
+            illegal_bins read_accepted_and_full = binsof(cp_read_accepted.rd_accepted) && binsof(cp_full.full_1); // if a read attempt is accepted it will free a spot
+        }                                                                                                         // even if a write attempt happens simultaniously, therefore 
+                                                                                                                  // this combination is illegal
 
         read_accepted_X_empty : cross cp_read_accepted, cp_empty;
 
         op_X_depth_X_legal : cross cp_op, cp_depth, cp_write_accepted, cp_read_accepted;
-        */
     endgroup
 
     // constructor
@@ -110,6 +116,6 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
         if(depth < 0) depth = 0;
         
         // cg sample
-        fifo_cg.sample();
+        fifo_cg.sample(tr);
     endfunction
 endclass

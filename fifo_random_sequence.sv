@@ -16,7 +16,7 @@ class fifo_random_sequence extends uvm_sequence #(fifo_item);
     end
 
     `uvm_info("SEQ", "Starting random sequence body without valid operation constraint", UVM_MEDIUM);
-    repeat (100) begin
+    repeat (200) begin
       req = fifo_item::type_id::create("req");
       start_item(req);
       assert(req.randomize()); // can be idle
