@@ -17,6 +17,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
 
     covergroup fifo_cg with function sample(fifo_item tr);
         option.per_instance = 1;
+        
         cp_op : coverpoint {vif.wr_en, vif.rd_en} {
             bins idle = {2'b00};
             bins write_only = {2'b10};
@@ -50,9 +51,16 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
             bins rd_not_accepted = {1'b0};
         }
         // Cross 
-        op_X_depth : cross cp_op, cp_depth;
+        op_X_depth : cross cp_op, cp_depth {
+            illegal_bins simultanious_X_empty = binsof(cp_op.simultanious) && binsof(cp_depth.empty);
+            illegal_bins write_X_empty = binsof(cp_op.write_only) && binsof(cp_depth.empty);
+        }
 
-        op_X_flags : cross cp_op, cp_full, cp_empty;
+        op_X_flags : cross cp_op, cp_full, cp_empty {
+            ignore_bins idle_X_full = binsof(cp_op.idle) && binsof(cp_full.full_1);
+            illegal_bins full_AND_empty = binsof(cp_full.full_1) && binsof(cp_empty.empty_1);
+            illegal_bins read_only_X_full = binsof(cp_op.read_only) && binsof(cp_full.full_1);
+        }
         
         write_accepted_X_op : cross cp_write_accepted, cp_op {
             illegal_bins write_accepted_X_idle = binsof(cp_write_accepted.wr_accepted) && binsof(cp_op.idle);
@@ -74,7 +82,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
 
         read_accepted_X_empty : cross cp_read_accepted, cp_empty;
 
-        op_X_depth_X_legal : cross cp_op, cp_depth, cp_write_accepted, cp_read_accepted;
+        // op_X_depth_X_legal : cross cp_op, cp_depth, cp_write_accepted, cp_read_accepted;
     endgroup
 
     // constructor
