@@ -10,23 +10,22 @@ class fifo_write_sequence extends uvm_sequence #(fifo_item);
         repeat (30) begin
             req = fifo_item::type_id::create("req");
             start_item(req);
-
             req.wr_en = 1;
             req.rd_en = 0;
             req.write_accepted = !req.full;
             req.read_accepted = 0;
             assert(req.randomize() with {wr_en == 1; rd_en == 0;});
+            finish_item(req);
 
+            // idle for 1 cycle
+            req = fifo_item::type_id::create("req");
+            start_item(req);
+            req.wr_en = 0;
+            req.rd_en = 0;
+            req.write_accepted = !req.full;
+            req.read_accepted = 0;
+            assert(req.randomize() with {wr_en == 0; rd_en == 0;});
             finish_item(req);
         end
-        // idle for 1 cycle
-        req = fifo_item::type_id::create("req");
-        start_item(req);
-        req.wr_en = 0;
-        req.rd_en = 0;
-        req.write_accepted = !req.full;
-        req.read_accepted = 0;
-        assert(req.randomize() with {wr_en == 0; rd_en == 0;});
-        finish_item(req);
     endtask
 endclass

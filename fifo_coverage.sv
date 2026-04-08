@@ -54,6 +54,7 @@ class fifo_coverage #(int DEPTH = 8) extends uvm_component;
         op_X_depth : cross cp_op, cp_depth {
             illegal_bins simultanious_X_empty = binsof(cp_op.simultanious) && binsof(cp_depth.empty);
             illegal_bins write_X_empty = binsof(cp_op.write_only) && binsof(cp_depth.empty);
+            ignore_bins idle_X_full = binsof(cp_op.idle) && binsof(cp_depth.full);
         }
 
         op_X_flags : cross cp_op, cp_full, cp_empty {
