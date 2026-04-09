@@ -174,7 +174,6 @@ This ensures both:
 ---
 
 ## How to Run
-```bash chmod +x run.sh ./run.sh```
 
 Ensure Riviera-PRO (or a compatible simulator) is available, then run:
 
