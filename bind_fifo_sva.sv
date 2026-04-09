@@ -1,4 +1,4 @@
-bind fifo fifo_sva #(
+bind FIFO_sync fifo_sva #(
   .DEPTH(DEPTH),
   .DATA_WIDTH(DATA_WIDTH)
 ) fifo_sva_inst (

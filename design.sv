@@ -73,3 +73,6 @@ module FIFO_sync #(
   end
 
 endmodule
+
+`include "fifo_sva.sv"
+`include "bind_fifo_sva.sv"
